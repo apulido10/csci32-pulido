@@ -11,7 +11,8 @@
   "dependencies": {
     "next": "15.5.2",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "@repo/ui": "*"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -23,6 +24,8 @@
     "eslint-config-next": "15.5.2",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*"
   }
 }
