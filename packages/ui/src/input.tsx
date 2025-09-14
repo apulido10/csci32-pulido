@@ -1,0 +1,55 @@
+import { getInputSizeStyles,Size } from "./size"
+import { HtmlHTMLAttributes, HTMLInputTypeAttribute } from "react"
+import { getCommonStyles } from "./tokens"
+import { getVariantBorderStyles, getVariantInputTextStyles, getVariantOutlineStyles, Variant } from "./variant"
+
+  interface InputProps {
+    variant?: Variant
+    size?: Size
+    placeholder?: string
+    type?: HTMLInputTypeAttribute
+    value?: any
+    setValue?: (newValue:any) => void
+    defaultValue?: any
+    name: string
+    id: string
+    className?:string
+
+  }
+
+export function Input({
+className,
+variant = Variant.PRIMARY,
+size = Size.MEDIUM,
+value,
+name,
+id,
+defaultValue,
+setValue,
+type ='text',
+placeholder,
+
+}:InputProps) {
+
+const sizeCssClasses = getInputSizeStyles(size)
+const variantOutlineCssClasses = getVariantOutlineStyles(variant)
+const variantBorderCssClasses = getVariantBorderStyles(variant)
+const variantInputTextCssClasses = getVariantInputTextStyles(variant)
+const commonCssClasses = getCommonStyles()
+
+
+const completedCssClasses = `${sizeCssClasses}  ${variantBorderCssClasses} ${variantInputTextCssClasses}  ${variantOutlineCssClasses} ${commonCssClasses} `
+
+  return(
+    <input
+      className = {completedCssClasses}
+      name = {name}
+      id={id}
+      defaultValue={defaultValue}
+      placeholder={placeholder}
+      type ={type}
+      value={value}
+      onChange={setValue ? (newValue) => setValue(newValue.currentTarget.value) : () => {}}
+    />
+  )
+}
