@@ -1,7 +1,6 @@
 
 import { getInputSizeStyles, Size } from "./size";
 import {  HTMLInputTypeAttribute } from "react";
-import { getCommonStyles } from "./tokens";
 import { getVariantBorderStyles, getVariantInputTextStyles, getVariantOutlineStyles, Variant } from "./variant";
 
 interface InputProps {
@@ -33,10 +32,10 @@ export default function Input({
   const variantOutlineCssClasses = getVariantOutlineStyles(variant);
   const variantBorderCssClasses = getVariantBorderStyles(variant);
   const variantInputTextCssClasses = getVariantInputTextStyles(variant);
-  const commonCssClasses = getCommonStyles();
+  
 
 const completedCssClasses =
-    `${sizeCssClasses} ${variantBorderCssClasses}   ${variantOutlineCssClasses} ${commonCssClasses} ${variantInputTextCssClasses} `;
+    `${sizeCssClasses} ${variantBorderCssClasses}   ${variantOutlineCssClasses}  ${variantInputTextCssClasses} `;
 
   return (
     <input
