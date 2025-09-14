@@ -38,7 +38,7 @@ const variantInputTextCssClasses = getVariantInputTextStyles(variant)
 const commonCssClasses = getCommonStyles()
 
 
-const completedCssClasses = `${sizeCssClasses}  ${variantBorderCssClasses} ${variantInputTextCssClasses}  ${variantOutlineCssClasses} ${commonCssClasses} `
+const completedCssClasses = `${sizeCssClasses}  ${variantBorderCssClasses}   ${variantOutlineCssClasses} ${commonCssClasses} ${variantInputTextCssClasses} `
 
   return(
     <input
