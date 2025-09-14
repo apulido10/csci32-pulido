@@ -1,53 +1,49 @@
 export enum Variant {
-  PRIMARY ,
-  SECONDARY ,
+  PRIMARY,
+  SECONDARY,
   TERTIARY,
 }
 
-export function getVariantBackgroundStyles(variant:Variant){
-
+export function getVariantBackgroundStyles(variant: Variant) {
   switch (variant) {
     case Variant.PRIMARY:
-      return 'bg-rose-600  hover:bg-rose-700 active:bg-rose-800'
+      return "bg-rose-600  hover:bg-rose-700 active:bg-rose-800";
     case Variant.SECONDARY:
-      return 'bg-pink-600 hover:bg-pink-700 active:bg-pink-800'
+      return "bg-pink-600 hover:bg-pink-700 active:bg-pink-800";
     case Variant.TERTIARY:
-      return 'bg-purple-600  hover:bg-purple-700 active:bg-purple-800'
+      return "bg-purple-600  hover:bg-purple-700 active:bg-purple-800";
   }
 }
 
-export function getVariantOutlineStyles(variant:Variant){
-
+export function getVariantOutlineStyles(variant: Variant) {
   switch (variant) {
     case Variant.PRIMARY:
-      return ' outline-rose-600 '
+      return "outline-purple-800";
     case Variant.SECONDARY:
-      return '  outline-pink-600'
+      return "outline-pink-600";
     case Variant.TERTIARY:
-      return '  outline-purple-600'
+      return "outline-purple-600";
   }
 }
 
-  export function getVariantBorderStyles(variant:Variant){
-
+export function getVariantBorderStyles(variant: Variant) {
   switch (variant) {
     case Variant.PRIMARY:
-      return 'border-2 border-rose-800'
+      return "border-2 border-rose-800";
     case Variant.SECONDARY:
-      return 'border-2 border-pink-800'
+      return "border-2 border-pink-800";
     case Variant.TERTIARY:
-      return 'border-2 border-purple-800'
+      return "border-2 border-purple-800";
   }
 }
 
-  export function getVariantInputTextStyles(variant:Variant){
-
+export function getVariantInputTextStyles(variant: Variant) {
   switch (variant) {
     case Variant.PRIMARY:
-      return 'text-black'
+      return "text-black";
     case Variant.SECONDARY:
-      return 'text-black'
+      return "text-black";
     case Variant.TERTIARY:
-      return 'text-black'
+      return "text-black";
   }
 }
