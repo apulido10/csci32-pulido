@@ -32,10 +32,9 @@ export default function Input({
   const variantOutlineCssClasses = getVariantOutlineStyles(variant);
   const variantBorderCssClasses = getVariantBorderStyles(variant);
   const variantInputTextCssClasses = getVariantInputTextStyles(variant);
-  
 
-const completedCssClasses =
-    `${sizeCssClasses} ${variantBorderCssClasses}   ${variantOutlineCssClasses}  ${variantInputTextCssClasses} `;
+
+const completedCssClasses = `${sizeCssClasses} ${variantBorderCssClasses}   ${variantOutlineCssClasses}  ${variantInputTextCssClasses} `;
 
   return (
     <input
