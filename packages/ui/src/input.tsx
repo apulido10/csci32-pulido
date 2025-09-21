@@ -35,7 +35,11 @@ export default function Input({
   
 
 const completedCssClasses =
+<<<<<<< HEAD
     `${sizeCssClasses} ${variantBorderCssClasses}   ${variantOutlineCssClasses}  ${variantInputTextCssClasses} `;
+=======
+    `${sizeCssClasses} ${variantBorderCssClasses}  ${variantOutlineCssClasses} ${commonCssClasses} ${variantInputTextCssClasses} `;
+>>>>>>> c03d709 (completed randomInt)
 
   return (
     <input
