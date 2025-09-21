@@ -27,7 +27,7 @@ export default function RandomNumberGameMenu({ startGame }: GuessingGameMenuProp
             </h1>
           </header>
           <form className="flex flex-col gap-4" onSubmit={onSubmitSettings}>
-           <p>Minimum guess value</p>
+           <p>Minimum guess value:</p>
            <Input
               defaultValue={0}
               type="number"
@@ -35,7 +35,7 @@ export default function RandomNumberGameMenu({ startGame }: GuessingGameMenuProp
               name="min"
               id="min"
             />
-            <p>Maximum guess value</p>
+            <p>Maximum guess value:</p>
             <Input
               defaultValue={10}
               type="number"
@@ -43,7 +43,7 @@ export default function RandomNumberGameMenu({ startGame }: GuessingGameMenuProp
               name="max"
               id="max"
             />
-            <p>Number of allowed</p>
+            <p>Number of allowed:</p>
             <Input
               defaultValue={3}
               type="number"
@@ -58,7 +58,7 @@ export default function RandomNumberGameMenu({ startGame }: GuessingGameMenuProp
         <div className="flex flex-col gap-4">
           <header className="flex flex-col gap-4">
             <h1 className="text-2xl font-bold">
-              Welcome to Alex's guessing game
+              Welcome to Alex guessing game
             </h1>
             <p>Are you ready to play?</p>
           </header>
