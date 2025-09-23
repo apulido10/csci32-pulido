@@ -12,16 +12,19 @@ export default function RandomNumberGame({ randomNumber, endGame, maxGuessCount 
 
   function submitGuess(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    const newGuessCount = guessCount + 1
+    const newGuessCount = guessCount + 1;
+
+ if (newGuessCount >= maxGuessCount && guess !== randomNumber) {
+    setFeedback(`You lose! The correct number was ${randomNumber}. Better luck next time :(`)
+    setGameOver(true)
+    return
+  }
     if (guess < randomNumber) {
       setFeedback('Higher')
     } else if (guess > randomNumber) {
       setFeedback('Lower')
     } else if (guess === randomNumber) {
       setFeedback(`You won in ${newGuessCount} guesses! Get ready for fabulous prizes and fame!`)
-      setGameOver(true)
-    } else if (newGuessCount === maxGuessCount) {
-      setFeedback(`You lose! The correct number was ${randomNumber}. Better luck next time :(`)
       setGameOver(true)
     }
     setGuessCount(newGuessCount)
