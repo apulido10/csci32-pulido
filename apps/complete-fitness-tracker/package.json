@@ -9,14 +9,17 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@repo/math": "*",
+    "@repo/ui": "*",
     "next": "15.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "@repo/ui": "*",
-    "@repo/math":"*"
+    "react-hook-form": "^7.65.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -25,8 +28,6 @@
     "eslint-config-next": "15.5.2",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
-    "typescript": "^5",
-    "@repo/eslint-config": "*",
-    "@repo/typescript-config": "*"
+    "typescript": "^5"
   }
 }
