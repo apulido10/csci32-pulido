@@ -1,9 +1,20 @@
-import Image from 'next/image'
-// I created a component for my nav bar
-import Nav from './components/nav'
+'use client'
+
+import { useAuth } from '@/app/hooks/useAuth'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+
 export default function Home() {
-  return <div>
-    <Nav/>
-    <h1 className='text-center text-2xl font-bold m-10'>Meals, workouts, progress — simplified in one tracker</h1>
-  </div>
+  const { user } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard')
+    } else {
+      router.push('/welcome')
+    }
+  }, [user, router])
+
+  return <div>Loading...</div>
 }

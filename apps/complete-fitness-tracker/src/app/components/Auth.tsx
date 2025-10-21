@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useAuth } from '../hooks/useAuth'
 import { Button } from '@repo/ui/button'
-import Input from '@repo/ui/input'
+import {Input} from '@repo/ui/input'
 import { Size } from '@repo/ui/size'
 import { Variant } from '@repo/ui/variant'
 
@@ -22,7 +22,7 @@ export default function Auth() {
     handleSubmit,
     formState: { errors },
   } = useForm<AuthFormInputs>({
-    defaultValues: { name: '', email: '', password: '' }, // prevents uncontrolled warnings
+    defaultValues: { name: '', email: '', password: '' },
   })
 
   const onSubmit = async (data: AuthFormInputs) => {
