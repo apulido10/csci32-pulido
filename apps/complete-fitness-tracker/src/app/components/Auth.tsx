@@ -1,9 +1,9 @@
 'use client'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../../hooks/useAuth'
 import { Button } from '@repo/ui/button'
-import {Input} from '@repo/ui/input'
+import { Input } from '@repo/ui/input'
 import { Size } from '@repo/ui/size'
 import { Variant } from '@repo/ui/variant'
 
@@ -37,14 +37,14 @@ export default function Auth() {
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center">
-        {isSignUpMode ? 'Sign Up' : 'Sign In'}
-      </h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">{isSignUpMode ? 'Sign Up' : 'Sign In'}</h2>
 
       {error && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
           {error}
-          <button onClick={clearError} className="ml-2 text-red-500 hover:text-red-700">×</button>
+          <button onClick={clearError} className="ml-2 text-red-500 hover:text-red-700">
+            ×
+          </button>
         </div>
       )}
 
@@ -107,12 +107,7 @@ export default function Auth() {
         {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
 
         <div className="w-full">
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            size={Size.LARGE}
-            variant={Variant.PRIMARY}
-            className="w-full"
-          >
+          <Button onClick={handleSubmit(onSubmit)} size={Size.LARGE} variant={Variant.PRIMARY} className="w-full">
             {isLoading ? 'Loading...' : isSignUpMode ? 'Sign Up' : 'Sign In'}
           </Button>
         </div>
