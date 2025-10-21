@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@repo/ui/button'
 import { GuessingGameEngineProps } from './page'
-import Input from '@repo/ui/input'
+import {Input} from '@repo/ui/input'
 import { useState } from 'react'
 
 export default function RandomNumberGame({ randomNumber, endGame, maxGuessCount }: GuessingGameEngineProps) {
