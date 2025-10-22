@@ -1,22 +1,23 @@
 {
-  "name": "complete-fitness-tracker",
+  "name": "csci32-nextjs-wideman",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build --turbopack",
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
+    "prebuild": "yarn codegen",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "codegen": "graphql-codegen --config codegen.ts",
     "codegen:watch": "graphql-codegen --config codegen.ts --watch"
   },
   "dependencies": {
-    "@repo/math": "*",
-    "@repo/ui": "*",
-    "@supabase/supabase-js": "^2.76.1",
+    "@repo/math": "0.0.0",
+    "@repo/ui": "0.0.0",
+    "@supabase/supabase-js": "^2.76.0",
     "graphql": "^16.11.0",
     "graphql-request": "^7.3.1",
-    "next": "15.5.2",
+    "next": "15.5.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.65.0"
@@ -33,8 +34,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.5.2",
-    "graphql-tag": "^2.12.6",
+    "eslint-config-next": "15.5.0",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "typescript": "^5"

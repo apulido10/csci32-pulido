@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
-import { useAuth } from '../../hooks/useAuth'
+import { useForm } from 'react-hook-form'
+import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@repo/ui/button'
 import { Input } from '@repo/ui/input'
 import { Size } from '@repo/ui/size'
@@ -18,12 +18,10 @@ export default function Auth() {
   const [isSignUpMode, setIsSignUpMode] = useState(false)
 
   const {
-    control,
+    register,
     handleSubmit,
     formState: { errors },
-  } = useForm<AuthFormInputs>({
-    defaultValues: { name: '', email: '', password: '' },
-  })
+  } = useForm<AuthFormInputs>()
 
   const onSubmit = async (data: AuthFormInputs) => {
     if (isSignUpMode) {
@@ -36,8 +34,8 @@ export default function Auth() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center">{isSignUpMode ? 'Sign Up' : 'Sign In'}</h2>
+    <div className="max-w-md mx-auto mt-8 p-6 bg-slate-800 text-amber-400 rounded-lg shadow-xl shadow-black">
+      <h2 className="text-2xl font-bold mb-6 text-center">{isSignUpMode ? 'Sign Up' : 'Log On'}</h2>
 
       {error && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -48,67 +46,41 @@ export default function Auth() {
         </div>
       )}
 
-      <form className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {isSignUpMode && (
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="Name (optional)"
-                size={Size.LARGE}
-                variant={Variant.PRIMARY}
-                value={field.value}
-                setValue={field.onChange}
-              />
-            )}
+          <Input
+            type="text"
+            placeholder="Name (optional)"
+            size={Size.LARGE}
+            variant={Variant.PRIMARY}
+            {...register('name')}
           />
         )}
 
-        <Controller
-          name="email"
-          control={control}
-          rules={{ required: 'Email is required' }}
-          render={({ field }) => (
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Email"
-              size={Size.LARGE}
-              variant={Variant.PRIMARY}
-              value={field.value}
-              setValue={field.onChange}
-            />
-          )}
+        <Input
+          type="email"
+          placeholder="Email"
+          size={Size.LARGE}
+          variant={Variant.PRIMARY}
+          {...register('email', { required: 'Email is required' })}
         />
         {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
 
-        <Controller
-          name="password"
-          control={control}
-          rules={{ required: 'Password is required', minLength: { value: 6, message: 'At least 6 characters' } }}
-          render={({ field }) => (
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Password"
-              size={Size.LARGE}
-              variant={Variant.PRIMARY}
-              value={field.value}
-              setValue={field.onChange}
-            />
-          )}
+        <Input
+          type="password"
+          placeholder="Password"
+          size={Size.LARGE}
+          variant={Variant.PRIMARY}
+          {...register('password', {
+            required: 'Password is required',
+            minLength: { value: 6, message: 'At least 6 characters' },
+          })}
         />
         {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
 
         <div className="w-full">
-          <Button onClick={handleSubmit(onSubmit)} size={Size.LARGE} variant={Variant.PRIMARY} className="w-full">
-            {isLoading ? 'Loading...' : isSignUpMode ? 'Sign Up' : 'Sign In'}
+          <Button size={Size.LARGE} variant={Variant.PRIMARY} className="w-full">
+            {isLoading ? 'Loading...' : isSignUpMode ? 'Sign Up' : "Let's get at it!"}
           </Button>
         </div>
       </form>
@@ -117,7 +89,7 @@ export default function Auth() {
         <button
           type="button"
           onClick={() => setIsSignUpMode(!isSignUpMode)}
-          className="text-emerald-600 hover:text-emerald-700 text-sm font-medium transition-colors"
+          className="text-amber-400 text-sm font-medium"
         >
           {isSignUpMode ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
         </button>
