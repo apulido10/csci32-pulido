@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { gqlClient, setAuthToken, clearAuthToken } from '../services/graphql-client'
-import { graphql } from '../generated/gql'
-import type { SignUpInput, SignInInput, AuthPayload, UserDto } from '../generated/graphql'
+import { graphql } from '@/generated/gql'
+import type { SignUpInput, SignInInput, AuthPayload, UserDto } from '@/generated/graphql'
 import { ClientError } from 'graphql-request'
 
 // Define the mutations using codegen graphql function
