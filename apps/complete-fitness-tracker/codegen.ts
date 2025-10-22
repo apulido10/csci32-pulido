@@ -4,25 +4,29 @@ import path from 'node:path'
 
 const isCI = !!process.env.VERCEL || process.env.CI === 'true'
 
-// CI uses a checked-in snapshot (make sure this file exists & is committed)
+// CI uses a checked-in snapshot so builds don’t hit localhost
 const localSnapshot = path.resolve(__dirname, 'schema.local.graphql')
 
-// Local/dev uses your running server (FIXED: /api/graphql, not /graphql)
+// Local/dev hits your running server (NOTE: /api/graphql)
 const schemaUrl = process.env.SCHEMA_URL ?? 'http://127.0.0.1:4000/api/graphql'
-const token = process.env.SCHEMA_TOKEN
 
-const supabaseHeaders: Record<string, string> | undefined = token
+// If you have a token, add it here; otherwise leave undefined
+const token = process.env.SCHEMA_TOKEN
+const headers: Record<string, string> | undefined = token
   ? { apikey: token, Authorization: `Bearer ${token}` }
   : undefined
 
 type HttpSchemaPointer = { [url: string]: { headers?: Record<string, string> } }
-const remoteWithHeaders: HttpSchemaPointer[] = [{ [schemaUrl]: { headers: supabaseHeaders } }]
+const remote: HttpSchemaPointer[] = [{ [schemaUrl]: { headers } }]
 
+// Use snapshot in CI, remote locally
 const schemaSource: CodegenConfig['schema'] = isCI
   ? localSnapshot
-  : (remoteWithHeaders as unknown as CodegenConfig['schema'])
+  : (remote as unknown as CodegenConfig['schema'])
 
-console.log(`[codegen] Using ${isCI ? 'snapshot' : 'remote'} schema: ${isCI ? localSnapshot : schemaUrl}`)
+console.log(
+  `[codegen] Using ${isCI ? 'snapshot' : 'remote'} schema: ${isCI ? localSnapshot : schemaUrl}`
+)
 
 const config: CodegenConfig = {
   schema: schemaSource,
@@ -32,7 +36,7 @@ const config: CodegenConfig = {
     'src/generated/': {
       preset: 'client',
       plugins: [],
-      // IMPORTANT: matches your usage: graphql(`...`)
+      // you’re using `graphql(\`...\`)` in code
       presetConfig: { gqlTagName: 'graphql' },
       config: { useTypeImports: true },
     },
