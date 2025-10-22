@@ -1,5 +1,6 @@
 'use client'
-import { useAuth } from '@/hooks/useAuth'
+
+import { useAuth } from '../../hooks/useAuth'
 import { useRouter } from 'next/navigation'
 
 export default function DashboardPage() {
@@ -60,8 +61,8 @@ export default function DashboardPage() {
             </h2>
             <div className="space-y-2 text-gray-600">
               <p>
-                You've successfully signed in. Your authentication token is stored securely and will be used for all API
-                requests.
+                You&apos;ve successfully signed in. Your authentication token is stored securely and will be used for
+                all API requests.
               </p>
               {user && (
                 <div className="mt-4 p-4 bg-gray-50 rounded-md">
@@ -97,7 +98,7 @@ export default function DashboardPage() {
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="text-green-600 text-3xl mb-2">✅</div>
               <h3 className="text-lg font-semibold text-gray-900 mb-1">Authenticated</h3>
-              <p className="text-gray-600 text-sm">You're logged in</p>
+              <p className="text-gray-600 text-sm">You&apos;re logged in</p>
             </div>
 
             <div className="bg-white rounded-lg shadow-md p-6">
@@ -109,11 +110,11 @@ export default function DashboardPage() {
 
           {/* Info Section */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-blue-900 mb-2">ℹ️ What's Next?</h3>
+            <h3 className="text-lg font-semibold text-blue-900 mb-2">ℹ️ What&apos;s Next?</h3>
             <ul className="space-y-2 text-blue-800">
               <li>• All your GraphQL requests will now include your authentication token</li>
               <li>• Your session persists across browser refreshes (stored in localStorage)</li>
-              <li>• Click "Sign Out" to clear your session and return to the welcome page</li>
+              <li>• Click &quot;Sign Out&quot; to clear your session and return to the welcome page</li>
             </ul>
           </div>
         </div>
