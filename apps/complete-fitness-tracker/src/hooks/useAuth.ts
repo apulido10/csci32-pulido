@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react'
+'use client'
+
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { gqlClient, setAuthToken, clearAuthToken } from '../services/graphql-client'
-import { graphql } from '@/generated/gql'
-import type { SignUpInput, SignInInput, AuthPayload, UserDto } from '@/generated/graphql'
-import { ClientError } from 'graphql-request'
+import { graphql } from '../generated/gql'
+import type { SignUpInput, SignInInput, AuthPayload, UserDto } from '../generated/graphql'
+import { ClientError, RequestDocument } from 'graphql-request'
 
-// Define the mutations using codegen graphql function
 const SIGN_UP_MUTATION = graphql(`
   mutation SignUp($input: SignUpInput!) {
     signUp(input: $input) {
@@ -17,7 +18,7 @@ const SIGN_UP_MUTATION = graphql(`
       }
     }
   }
-`)
+`) as unknown as RequestDocument
 
 const SIGN_IN_MUTATION = graphql(`
   mutation SignIn($input: SignInInput!) {
@@ -30,7 +31,56 @@ const SIGN_IN_MUTATION = graphql(`
       }
     }
   }
-`)
+`) as unknown as RequestDocument
+
+async function requestWithRetry<T>(doc: RequestDocument, vars?: Record<string, unknown>, tries = 2): Promise<T> {
+  for (let i = 0; i < tries; i++) {
+    try {
+      return await gqlClient.request<T>(doc, vars)
+    } catch (e) {
+      if (i === tries - 1) throw e
+      await new Promise((r) => setTimeout(r, 400 * (i + 1)))
+    }
+  }
+  throw new Error('unreachable')
+}
+
+// Error extraction with more details
+function extractErrorMessage(err: unknown, fallback: string): string {
+  // full details in dev console
+  // eslint-disable-next-line no-console
+  console.error('Auth error:', err)
+
+  if (err instanceof ClientError) {
+    const gqlMsg = err.response?.errors?.[0]?.message
+    if (gqlMsg) return gqlMsg
+
+    const status = err.response?.status
+    const statusText = err.response?.statusText
+    const requestObj = (err as ClientError).request as unknown
+    let url: string | undefined
+    if (requestObj && typeof requestObj === 'object' && 'url' in requestObj) {
+      const maybeUrl = (requestObj as { url?: unknown }).url
+      if (typeof maybeUrl === 'string') url = maybeUrl
+    }
+    const bodyPreview =
+      typeof err.response?.data === 'string'
+        ? err.response.data.slice(0, 200)
+        : JSON.stringify(err.response?.data ?? {}).slice(0, 200)
+
+    return `Request failed ${status ?? ''} ${statusText ?? ''} at ${url ?? ''} — ${bodyPreview || fallback}`.trim()
+  }
+
+  if (err && typeof err === 'object' && 'message' in err) {
+    const maybeMessage = (err as { message?: unknown }).message
+    if (typeof maybeMessage === 'string' && maybeMessage.length) {
+      return maybeMessage
+    }
+    return fallback
+  }
+
+  return fallback
+}
 
 export function useAuth() {
   const [isLoading, setIsLoading] = useState(false)
@@ -39,49 +89,36 @@ export function useAuth() {
   const [isHydrated, setIsHydrated] = useState(false)
   const router = useRouter()
 
-  // Handle hydration and initialize user from localStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem('authUser')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
+    try {
+      const storedUser = typeof window !== 'undefined' ? localStorage.getItem('authUser') : null
+      if (storedUser) setUser(JSON.parse(storedUser))
+    } catch {
+    } finally {
+      setIsHydrated(true)
     }
-    setIsHydrated(true)
   }, [])
-
-  // Helper function to extract user-friendly error message from GraphQL errors
-  const extractErrorMessage = (err: unknown, fallback: string): string => {
-    if (err instanceof ClientError) {
-      return err.response?.errors?.[0]?.message || fallback
-    }
-    return fallback
-  }
 
   const signUp = async (input: SignUpInput): Promise<AuthPayload | null> => {
     try {
       setIsLoading(true)
       setError(null)
-      const result = await gqlClient.request(SIGN_UP_MUTATION, { input })
 
-      if (result.signUp) {
-        // Set auth token for future requests
+      const result = await requestWithRetry<{ signUp: AuthPayload | null }>(SIGN_UP_MUTATION, { input })
+
+      if (result?.signUp) {
         setAuthToken(result.signUp.token)
-
-        // Store user data
         setUser(result.signUp.user)
         if (typeof window !== 'undefined') {
           localStorage.setItem('authUser', JSON.stringify(result.signUp.user))
         }
-
-        // Redirect to dashboard after successful sign up
         router.push('/dashboard')
-
         return result.signUp
       }
 
       return null
     } catch (err) {
-      const errorMessage = extractErrorMessage(err, 'Sign up failed')
-      setError(errorMessage)
+      setError(extractErrorMessage(err, 'Sign up failed'))
       return null
     } finally {
       setIsLoading(false)
@@ -93,28 +130,21 @@ export function useAuth() {
       setIsLoading(true)
       setError(null)
 
-      const result = await gqlClient.request(SIGN_IN_MUTATION, { input })
+      const result = await requestWithRetry<{ signIn: AuthPayload | null }>(SIGN_IN_MUTATION, { input })
 
-      if (result.signIn) {
-        // Set auth token for future requests
+      if (result?.signIn) {
         setAuthToken(result.signIn.token)
-
-        // Store user data
         setUser(result.signIn.user)
         if (typeof window !== 'undefined') {
           localStorage.setItem('authUser', JSON.stringify(result.signIn.user))
         }
-
-        // Redirect to dashboard after successful sign in
         router.push('/dashboard')
-
         return result.signIn
       }
 
       return null
     } catch (err) {
-      const errorMessage = extractErrorMessage(err, 'Sign in failed')
-      setError(errorMessage)
+      setError(extractErrorMessage(err, 'Sign in failed'))
       return null
     } finally {
       setIsLoading(false)
@@ -122,7 +152,6 @@ export function useAuth() {
   }
 
   const signOut = () => {
-    // Clear auth token and localStorage
     clearAuthToken()
     setUser(null)
     if (typeof window !== 'undefined') {
@@ -131,9 +160,7 @@ export function useAuth() {
     setError(null)
   }
 
-  const clearError = () => {
-    setError(null)
-  }
+  const clearError = () => setError(null)
 
   return {
     isLoading,
@@ -146,23 +173,3 @@ export function useAuth() {
     clearError,
   }
 }
-
-// Example usage:
-// const { signUp, signIn, signOut, isLoading, error, clearError } = useAuth()
-//
-// const handleSignUp = async () => {
-//   const result = await signUp({ email, password, name })
-//   if (result) {
-//     console.log('Signed up:', result.user)
-//     // Redirect or update UI
-//   }
-// }
-//
-// const handleSignIn = async () => {
-//   const result = await signIn({ email, password })
-//   if (result) {
-//     console.log('Signed in:', result.user)
-//     // Redirect or update UI
-//   }
-// }
-
