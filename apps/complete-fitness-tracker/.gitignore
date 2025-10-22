@@ -40,8 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# GraphQL generated schema
-schema.graphql
+# # GraphQL generated schema
+# schema.graphql
 
-# Generated types from schema introspection
-src/generated
+# # Generated types from schema introspection
+# src/generated
