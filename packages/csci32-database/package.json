@@ -7,7 +7,12 @@
     ".": "./src/client.ts"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "prisma db seed",
+     "prisma:generate": "prisma generate"
+  },
+  "prisma": {
+    "seed": "tsx ./prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +21,7 @@
     "@types/node": "^24.3.0",
     "prisma": "^6.15.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
     "typescript": "^5.9.2"
   },
   "dependencies": {
