@@ -10,12 +10,15 @@ import {
   Mutation,
   Authorized,
   Int,
+  FieldResolver,
+  Root,
 } from 'type-graphql'
 import type { Context } from '@/utils/graphql'
 import { AuthPayload, SignUpInput } from './types/AuthTypes'
 import { SignInInput } from './types/SignInTypes'
 import { PermissionName } from 'csci32-database'
 import { FindManyUsersInput } from './types/FindManyUsersInput'
+import { Role } from './types/Role'
 
 @ObjectType()
 class User {
@@ -27,9 +30,11 @@ class User {
 
   @Field(() => String, { nullable: true })
   email?: string
+
+  role_id?: string
 }
 
-@Resolver()
+@Resolver(() => User)
 export class UserResolver {
   @Authorized(PermissionName.UserRead)
   @Query(() => [User])
@@ -54,7 +59,6 @@ export class UserResolver {
     @Arg('input', () => SignUpInput) input: SignUpInput,
     @Ctx() { userService }: Context
   ) {
-    if (!input.email || !input.password) throw new Error('email and password are required')
     const { user, token } = await userService.createUser(input)
     return { user, token }
   }
@@ -64,8 +68,15 @@ export class UserResolver {
     @Arg('input', () => SignInInput) input: SignInInput,
     @Ctx() { userService }: Context
   ) {
-    if (!input.email || !input.password) throw new Error('email and password are required')
     const { user, token } = await userService.authenticateUser(input)
     return { user, token }
+  }
+
+  @FieldResolver(() => Role, { nullable: true })
+  async role(@Root() user: User, @Ctx() ctx: Context) {
+    if (!user.role_id) return null
+    return ctx.prisma.role.findUnique({
+      where: { role_id: user.role_id },
+    })
   }
 }

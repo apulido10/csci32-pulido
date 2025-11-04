@@ -9,7 +9,7 @@ import { getBooleanEnvVar, getRequiredStringEnvVar } from '@/utils'
 import type { UserService } from '@/services/UserService'
 import mercurius from 'mercurius'
 import mercuriusLogging from 'mercurius-logging'
-
+import { RoleResolver } from '@/resolvers/RoleResolver'
 const GRAPHQL_API_PATH = '/api/graphql'
 const GRAPHQL_DEPTH_LIMIT = 7
 
@@ -24,7 +24,7 @@ registerEnumType(RoleName, {
   description: 'Enum representing valid roles for users',
 })
 
-const resolvers = [UserResolver] as NonEmptyArray<Function>
+const resolvers = [UserResolver,RoleResolver] as NonEmptyArray<Function>
 
 export interface Context {
   request: FastifyRequest
