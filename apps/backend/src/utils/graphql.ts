@@ -1,35 +1,25 @@
 import { UserResolver } from '@/resolvers/UserResolver'
-import { buildSchema, registerEnumType } from 'type-graphql'
-import { customAuthChecker } from '@/utils/authChecker'
-import { PermissionName, RoleName } from 'csci32-database'
+import { PostResolver } from '@/resolvers/PostResolver'
+import { buildSchema } from 'type-graphql'
 import type { NonEmptyArray } from 'type-graphql'
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { PrismaClient } from 'csci32-database'
 import { getBooleanEnvVar, getRequiredStringEnvVar } from '@/utils'
 import type { UserService } from '@/services/UserService'
+import type { PostService } from '@/services/PostService'
 import mercurius from 'mercurius'
 import mercuriusLogging from 'mercurius-logging'
-import { RoleResolver } from '@/resolvers/RoleResolver'
+
 const GRAPHQL_API_PATH = '/api/graphql'
 const GRAPHQL_DEPTH_LIMIT = 7
 
-// 1️⃣ Register the enums with TypeGraphQL
-registerEnumType(PermissionName, {
-  name: 'PermissionName',
-  description: 'Enum representing valid permissions for authorization',
-})
-
-registerEnumType(RoleName, {
-  name: 'RoleName',
-  description: 'Enum representing valid roles for users',
-})
-
-const resolvers = [UserResolver,RoleResolver] as NonEmptyArray<Function>
+const resolvers = [UserResolver, PostResolver] as NonEmptyArray<Function>
 
 export interface Context {
   request: FastifyRequest
   reply: FastifyReply
   userService: UserService
+  postService: PostService
   prisma: PrismaClient
   log: FastifyBaseLogger
 }
@@ -37,7 +27,7 @@ export interface Context {
 export async function registerGraphQL(fastify: FastifyInstance) {
   const schema = await buildSchema({
     resolvers,
-    authChecker: customAuthChecker,
+    authChecker: () => true,
   })
 
   const graphiql = getBooleanEnvVar('ENABLE_GRAPHIQL', false)
@@ -53,6 +43,7 @@ export async function registerGraphQL(fastify: FastifyInstance) {
       request,
       reply,
       userService: fastify.userService,
+      postService: fastify.postService,
       prisma: fastify.prisma,
       log: fastify.log,
     }),

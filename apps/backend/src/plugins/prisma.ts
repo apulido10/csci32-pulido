@@ -1,6 +1,6 @@
-import { prisma, PrismaClient } from 'csci32-database'
-import type { FastifyInstance } from 'fastify'
 import fp from 'fastify-plugin'
+import { PrismaClient } from 'csci32-database'
+import type { FastifyInstance } from 'fastify'
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -12,11 +12,15 @@ export const PRISMA_FASTIFY_PLUGIN_NAME = 'prisma'
 
 export default fp(
   async function prismaPlugin(fastify: FastifyInstance) {
-    await prisma.$connect()
+    const prisma = new PrismaClient()
+
+    fastify.decorate('prisma', prisma)
+
     fastify.addHook('onClose', async () => {
       await prisma.$disconnect()
     })
-    fastify.decorate(PRISMA_FASTIFY_PLUGIN_NAME, prisma)
   },
-  { name: PRISMA_FASTIFY_PLUGIN_NAME },
+  {
+    name: PRISMA_FASTIFY_PLUGIN_NAME,
+  },
 )
